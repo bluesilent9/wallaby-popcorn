@@ -1,0 +1,23 @@
+name: Apply prepared Wallaby source (no APK build)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apply-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: wallaby-popcorn
+          fetch-depth: 1
+      - name: Apply reviewed source changes only
+        run: |
+          echo "974e6939e1992532a51dd1823321adc660d9b8c0d623a417d54430cd9e164fe3  wallaby-preparation.patch" | sha256sum --check
+          git apply --check --exclude=".github/workflows/*" wallaby-preparation.patch
+          git apply --index --exclude=".github/workflows/*" wallaby-preparation.patch
+          git rm wallaby-preparation.patch
+          git config user.name "Wallaby Popcorn"
+          git config user.email "bluesilent9@users.noreply.github.com"
+          git commit -m "Preserve IPv6 SSH and prepare Wallaby Popcorn branding [skip ci]"
+          git push origin HEAD:wallaby-popcorn
