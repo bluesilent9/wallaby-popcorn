@@ -48,6 +48,17 @@ abstract class JellyfinWebViewClient(
                 onConnectedToWebapp()
                 assetsPathHandler.inject("native/injectionScript.js")
             }
+            // Replace only known Jellyfin web-branding assets, including hashed bundle filenames.
+            // This also covers splash/screensaver CSS requests before the SPA branding script runs.
+            !request.isForMainFrame && path.substringAfterLast('/').matches(
+                Regex("""banner-(light|dark)(\.[a-f0-9]+)?\.(png|svg)"""),
+            ) -> {
+                val tone = if (path.substringAfterLast('/').startsWith("banner-dark")) "dark" else "light"
+                assetsPathHandler.inject("native/wallaby-popcorn-wordmark-$tone.svg")
+            }
+            !request.isForMainFrame && path.substringAfterLast('/').matches(
+                Regex("""(icon-transparent|notificationicon|touchicon[0-9]*)(\.[a-f0-9]+)?\.png|favicon(\.[a-f0-9]+)?\.ico"""),
+            ) -> assetsPathHandler.inject("native/wallaby-popcorn-mark.png")
             // Load injected scripts from application assets
             path.contains("/native/") -> assetsPathHandler.inject("native/${url.lastPathSegment}")
             // Load the chrome.cast.js library instead

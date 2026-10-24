@@ -6,6 +6,10 @@ Your Jellyfin library, with built-in SSH tunnelling and a little cinema magic.
 
 Wallaby Popcorn is an independent fork of [Jellyfin Android](https://github.com/jellyfin/jellyfin-android). It keeps Jellyfin’s navigation, library and playback functionality, adds the existing integrated SSH setup, and applies Wallaby Popcorn branding. It is not an official Jellyfin release.
 
+## Development branding work
+
+`Development` adds transparent Wallaby Popcorn branding for the web header, splash, default logo images, screensaver and favicons, using the same mascot and popcorn bucket as the launcher. It includes wordmarks for light and dark backgrounds and a transparent native connection-screen logo. This work is **source only: not compiled, tested or installed**, and has not been promoted to `Stable`. See [branding notes](docs/DEVELOPMENT_BRANDING.md).
+
 ## Current scope and status
 
 Android **Mobile only**, using the libre variant. The SSH repair was built and installed on two phones on 25 October 2026. Both reconnected through SSH, signed in automatically and displayed the media library. All 21 focused tests passed. Playback and external-network testing remain separate checks. Android TV, desktop and other Wallaby Popcorn packages are future work.

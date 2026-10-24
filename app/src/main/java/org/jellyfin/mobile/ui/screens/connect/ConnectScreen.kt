@@ -62,7 +62,7 @@ fun LogoHeader() {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
-                painter = painterResource(R.drawable.wallaby_art),
+                painter = painterResource(R.drawable.wallaby_mark),
                 modifier = Modifier.height(96.dp),
                 contentDescription = null,
             )

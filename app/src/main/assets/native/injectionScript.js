@@ -7,6 +7,7 @@
         document.head.appendChild(theme);
     }
     const scripts = [
+        '/native/wallaby-branding.js',
         '/native/nativeshell.js',
         '/native/EventEmitter.js',
         document.currentScript.src.concat('?deferred=true&ts=', Date.now())

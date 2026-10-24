@@ -5,6 +5,24 @@
 .button-submit, .button-accent { background:var(--wallaby-gold) !important; color:#160d22 !important; }
 .emby-tab-button-active, .navMenuOption-selected { color:var(--wallaby-gold) !important; }
 .mdl-slider-background-lower, .itemProgressBarForeground { background:var(--wallaby-teal) !important; }
-.pageTitleWithDefaultLogo { background-image:url('/native/wallaby-popcorn.png') !important; background-size:2rem 2rem !important; background-position:left center !important; padding-left:2.6rem; width:auto !important; }
-.pageTitleWithDefaultLogo::after { content:'Wallaby Popcorn'; color:var(--wallaby-gold); font-size:1.1rem; font-weight:600; white-space:nowrap; }
-@media(max-width:400px) { .pageTitleWithDefaultLogo::after { font-size:.9rem; } }
+/* Transparent wordmarks keep the logo legible without a square cinema backdrop. */
+.pageTitleWithDefaultLogo {
+    background-image:var(--wallaby-wordmark, url('/native/wallaby-popcorn-wordmark-light.svg')) !important;
+    background-size:contain !important;
+    background-position:left center !important;
+    background-repeat:no-repeat !important;
+    width:clamp(9rem, 35vw, 15rem) !important;
+    max-width:100%;
+    padding-left:0 !important;
+}
+.splashLogo {
+    background-image:url('/native/wallaby-popcorn-mark.png') !important;
+    background-size:contain !important;
+    background-repeat:no-repeat !important;
+}
+.logoScreenSaverImage {
+    object-fit:contain;
+    left:50%;
+    margin-left:0 !important;
+    transform:translateX(-50%);
+}
