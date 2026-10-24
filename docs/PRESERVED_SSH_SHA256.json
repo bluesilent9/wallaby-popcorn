@@ -1,0 +1,14 @@
+{
+  "app/src/test/java/org/jellyfin/mobile/setup/SshServerAddressTest.kt": "416be93c82ca5ef9318f66dc72d5df1c703ff426f7ec2b60ac9836a0a4b70446",
+  "app/src/test/java/org/jellyfin/mobile/setup/ssh/DualStackSocketFactoryTest.kt": "32a109245ea172ae8a879bc995d4708a79fce28740bfe536c5a5c818fdee28f5",
+  "app/src/main/java/org/jellyfin/mobile/setup/ConnectionHelper.kt": "012c6add0c9162fff4a8a21912c606d493d466c7f15578ed7226d27f0a824adc",
+  "app/src/main/java/org/jellyfin/mobile/setup/ConnectFragment.kt": "cca5eb9c33f2655f1fb771706490852ec3559a2da03c3967d99ae36d0c457f3d",
+  "app/src/main/java/org/jellyfin/mobile/setup/SshServerAddress.kt": "d03a8a44b4e2a1a95385f2ef0db8bfb1b847665bfea464886cada5963271e290",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/DualStackSocketFactory.kt": "7afc1b3a2c30c902157d1568b0b22d9d19eee55fa68d093ebda4d65ba22e08a0",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/SshTunnelManager.kt": "e56fb296de521d88c452b0e096d5663a6038ab6a65031b0ac0067eaa3ac99c3f",
+  "app/src/main/java/org/jellyfin/mobile/MainViewModel.kt": "7324d3dd36862e4626b6f97993673723311557fb1fe74bcd2d7fe05231f9369c",
+  "app/src/main/java/org/jellyfin/mobile/app/ApiClientController.kt": "ceea12171210da4c1020ea7582e43e3112be3e40a968e951b9f1030eb91ac29b",
+  "app/src/main/java/org/jellyfin/mobile/app/AppModule.kt": "cea27afcf0aa7d94611eab00f4873fe7d235128c6c8c638cfe858de06dfe41d6",
+  "app/src/main/java/org/jellyfin/mobile/ui/screens/connect/ServerSelection.kt": "5d49752829e989ffb7e829fb27f3ca3c501e074b3d401e6fc8eaa91763813afb",
+  "app/src/main/java/org/jellyfin/mobile/webapp/WebViewFragment.kt": "5559cc4c0d351b4fc56cb98ec8bc90c60b208803dfdf0d576a63cf9db4eae0e1"
+}

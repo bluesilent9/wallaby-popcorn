@@ -19,7 +19,7 @@
     <string name="pref_category_video_player">视频播放器</string>
     <string name="pref_music_notification_always_dismissible_title">可忽略的播放器通知</string>
     <string name="pref_category_music_player">音乐播放器</string>
-    <string name="activity_name_settings">Jellyfin设置</string>
+    <string name="activity_name_settings">Wallaby Popcorn设置</string>
     <string name="playback_info_and_x_more">....还有 %d 个</string>
     <string name="playback_info_audio_streams">音频流</string>
     <string name="playback_info_video_streams">视频流</string>
@@ -56,7 +56,7 @@
     <string name="external_player_mpv">MPV 播放器</string>
     <string name="external_player_app">外部播放器应用</string>
     <string name="music_notification_channel_description">用于控制音乐播放</string>
-    <string name="music_notification_channel">Jellyfin 音乐播放器</string>
+    <string name="music_notification_channel">Wallaby Popcorn 音乐播放器</string>
     <string name="media_service_car_item_no_title">无标题</string>
     <string name="media_service_car_section_genres">风格</string>
     <string name="media_service_car_section_songs">歌曲</string>

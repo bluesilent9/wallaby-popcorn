@@ -18,7 +18,7 @@
     <string name="notification_action_pause">Пауза</string>
     <string name="notification_action_play">Відтворити</string>
     <string name="notification_action_previous">Попередній</string>
-    <string name="music_notification_channel">Музичний плеєр Jellyfin</string>
+    <string name="music_notification_channel">Музичний плеєр Wallaby Popcorn</string>
     <string name="media_service_car_item_no_title">Без назви</string>
     <string name="media_service_car_section_genres">Жанри</string>
     <string name="media_service_car_section_songs">Пісні</string>
@@ -57,7 +57,7 @@
     <string name="pref_music_notification_always_dismissible_summary_off">Сповіщення можна відхилити, лише коли відтворення призупинено</string>
     <string name="pref_music_notification_always_dismissible_title">Сповіщення плеєра, яке можна закрити</string>
     <string name="pref_category_music_player">Музичний плеєр</string>
-    <string name="activity_name_settings">Налаштування Jellyfin</string>
+    <string name="activity_name_settings">Налаштування Wallaby Popcorn</string>
     <string name="external_player_unknown_error">Невідома помилка у зовнішньому плеєрі. Відстеження відтворення вимкнено.</string>
     <string name="external_player_invalid_player">Не обрано жодного дійсного зовнішнього плеєра. Відстеження відтворення вимкнено.</string>
     <string name="external_player_not_supported_yet">Відстеження відтворення поки що не підтримується у вибраному зовнішньому плеєрі. Зверніться до розробників, щоб спробувати додати підтримку.</string>

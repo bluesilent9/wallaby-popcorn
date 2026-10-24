@@ -1,4 +1,11 @@
 (() => {
+    if (!document.getElementById('wallaby-popcorn-theme')) {
+        const theme = document.createElement('link');
+        theme.id = 'wallaby-popcorn-theme';
+        theme.rel = 'stylesheet';
+        theme.href = '/native/wallaby-popcorn.css';
+        document.head.appendChild(theme);
+    }
     const scripts = [
         '/native/nativeshell.js',
         '/native/EventEmitter.js',

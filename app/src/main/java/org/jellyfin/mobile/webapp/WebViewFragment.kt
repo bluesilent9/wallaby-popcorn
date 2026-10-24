@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.jellyfin.mobile.MainViewModel
 import org.jellyfin.mobile.R
 import org.jellyfin.mobile.app.AppPreferences
+import org.jellyfin.mobile.app.ApiClientController
 import org.jellyfin.mobile.bridge.ExternalPlayer
 import org.jellyfin.mobile.bridge.MediaSegments
 import org.jellyfin.mobile.bridge.NativeInterface
@@ -51,6 +52,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class WebViewFragment : Fragment(), BackPressInterceptor, JellyfinWebChromeClient.FileChooserListener {
     val appPreferences: AppPreferences by inject()
+    private val apiClientController: ApiClientController by inject()
     private val mainViewModel: MainViewModel by activityViewModel()
     private val webappFunctionChannel: WebappFunctionChannel by inject()
     private lateinit var assetsPathHandler: AssetsPathHandler
@@ -190,7 +192,8 @@ class WebViewFragment : Fragment(), BackPressInterceptor, JellyfinWebChromeClien
         addJavascriptInterface(externalPlayer, "ExternalPlayer")
         addJavascriptInterface(mediaSegments, "MediaSegments")
 
-        loadUrl("${server.hostname.trimEnd('/')}/")
+        val endpoint = apiClientController.endpointForExistingConnection(server.hostname)
+        loadUrl("${endpoint.trimEnd('/')}/")
         postDelayed(timeoutRunnable, Constants.INITIAL_CONNECTION_TIMEOUT)
         postDelayed(showLoadingContainerRunnable, Constants.SHOW_PROGRESS_BAR_DELAY)
     }

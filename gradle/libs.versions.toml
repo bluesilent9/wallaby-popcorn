@@ -45,6 +45,8 @@ compose-material-icons = "1.7.8"
 # Network
 jellyfin-sdk = "1.8.12"
 coil = "3.6.3"
+jsch = "2.28.7"
+bouncycastle = "1.85.2"
 
 # Media
 androidx-media = "1.8.0"
@@ -122,6 +124,8 @@ compose-material-icons-extended = { group = "androidx.compose.material", name = 
 
 # Network
 jellyfin-sdk = { group = "org.jellyfin.sdk", name = "jellyfin-core", version.ref = "jellyfin-sdk" }
+jsch = { group = "com.github.mwiede", name = "jsch", version.ref = "jsch" }
+bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }

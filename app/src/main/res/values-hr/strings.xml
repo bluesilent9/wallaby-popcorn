@@ -10,7 +10,7 @@
     <string name="pref_category_video_player">Video reproduktor</string>
     <string name="pref_music_notification_always_dismissible_title">Obavijesti aplikacije koje se mogu odbaciti</string>
     <string name="pref_category_music_player">Izvođač Glazbe</string>
-    <string name="activity_name_settings">Jellyfin Postavke</string>
+    <string name="activity_name_settings">Wallaby Popcorn Postavke</string>
     <string name="external_player_unknown_error">Nepoznata greška u vanjskom programu za reprodukciju. Praćenje reprodukcije onemogućeno.</string>
     <string name="external_player_invalid_player">Nije odabran važeći vanjski program za reprodukciju. Praćenje reprodukcije onemogućeno.</string>
     <string name="external_player_not_supported_yet">Praćenje reprodukcije još nije podržano u odabranom vanjskom programu za reprodukciju. Obratite se programerima da pokušaju dodati podršku za to.</string>
@@ -57,7 +57,7 @@
     <string name="external_player_system_default">Zadano sustavom</string>
     <string name="external_player_mx_player_pro_description">Plaćena verzija MX Player-a koja pruža neprekinuti video doživljaj.</string>
     <string name="external_player_mx_player_free_description">Snažan video player sa naprednim hardverskim ubrzanjem i podrškom za titlove.</string>
-    <string name="music_notification_channel">Jellyfin Izvođač Glazbe</string>
+    <string name="music_notification_channel">Wallaby Popcorn Izvođač Glazbe</string>
     <string name="media_service_car_item_no_title">Bez naslova</string>
     <string name="media_service_car_section_genres">Žanrovi</string>
     <string name="media_service_car_section_songs">Pjesme</string>

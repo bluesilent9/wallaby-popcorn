@@ -26,7 +26,7 @@
     <string name="media_service_car_section_songs">Sangir</string>
     <string name="media_service_car_section_genres">Greinar</string>
     <string name="media_service_car_item_no_title">Einki heiti</string>
-    <string name="music_notification_channel">Jellyfin tónleikaspælari</string>
+    <string name="music_notification_channel">Wallaby Popcorn tónleikaspælari</string>
     <string name="notification_action_rewind">Spola aftur</string>
     <string name="notification_action_play">Spæl</string>
     <string name="notification_action_fast_forward">Spola fram</string>
@@ -36,7 +36,7 @@
     <string name="menu_item_hardware_decoding">Tólbúnaðaravkoting</string>
     <string name="menu_item_software_decoding">Ritbúnaðaravkoting</string>
     <string name="skip_media_segment">Leyp um</string>
-    <string name="activity_name_settings">Jellyfin-stillingar</string>
+    <string name="activity_name_settings">Wallaby Popcorn-stillingar</string>
     <string name="pref_category_music_player">Tónleikaspælari</string>
     <string name="video_player_web">Vevspælari</string>
     <string name="video_player_external">Ytri spælari</string>

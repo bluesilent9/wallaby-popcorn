@@ -13,7 +13,7 @@
     <string name="pref_music_notification_always_dismissible_title">Verwerfbare Player-Benachrichtigung</string>
     <string name="pref_category_video_player">Videoplayer</string>
     <string name="pref_category_music_player">Musikplayer</string>
-    <string name="activity_name_settings">Jellyfin-Einstellungen</string>
+    <string name="activity_name_settings">Wallaby Popcorn-Einstellungen</string>
     <string name="menu_item_none">Nichts</string>
     <string name="playback_info_audio_streams">Audiostreams</string>
     <string name="playback_info_video_streams">Videostreams</string>
@@ -57,7 +57,7 @@
     <string name="external_player_mpv_description">Ein einfacher, kleiner und leichtgewichtiger freier Videoplayer. Er unterstützt eine Vielzahl von Medienformaten.</string>
     <string name="media_service_generic_error">Ein Fehler ist aufgetreten</string>
     <string name="music_notification_channel_description">Zur Steuerung der Musikwiedergabe verwendet</string>
-    <string name="music_notification_channel">Jellyfin-Musikplayer</string>
+    <string name="music_notification_channel">Wallaby Popcorn-Musikplayer</string>
     <string name="media_service_car_item_no_title">Kein Titel</string>
     <string name="media_service_car_section_genres">Genre</string>
     <string name="media_service_car_section_songs">Lieder</string>

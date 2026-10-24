@@ -31,6 +31,8 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
+        // Preserve the installed SSH app identity and its saved keys and login.
+        applicationId = "org.jellyfin.mobile.debug"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionName = project.getVersionName()
@@ -70,7 +72,6 @@ android {
         }
 
         getByName("debug") {
-            applicationIdSuffix = ".debug"
             isDebuggable = true
         }
     }
@@ -122,7 +123,7 @@ android {
     }
 }
 
-base.archivesName.set("jellyfin-android-v${project.getVersionName()}")
+base.archivesName.set("wallaby-popcorn-android-v${project.getVersionName()}")
 
 dependencies {
     val proprietaryImplementation by configurations
@@ -164,6 +165,8 @@ dependencies {
             "unstable-snapshot" -> version { strictly(JellyfinSdk.SNAPSHOT_UNSTABLE) }
         }
     }
+    implementation(libs.jsch)
+    implementation(libs.bouncycastle)
     implementation(libs.bundles.coil)
 
     // Media

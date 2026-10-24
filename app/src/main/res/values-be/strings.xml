@@ -13,7 +13,7 @@
     <string name="download_no_storage_permission">Немагчыма загрузіць файлы без дазволу на захоўванне</string>
     <string name="media_service_car_section_recents">Нядаўна прайгравалася</string>
     <string name="media_service_car_section_songs">Песні</string>
-    <string name="music_notification_channel">Музычны прайгравальнік Jellyfin</string>
+    <string name="music_notification_channel">Музычны прайгравальнік Wallaby Popcorn</string>
     <string name="media_service_car_section_artists">Выканаўцы</string>
     <string name="notification_action_next">Далей</string>
     <string name="external_player_mx_player_pro">Прайгравальнік MX Player Pro</string>
@@ -85,7 +85,7 @@
     <string name="pref_download_location">Месца для спамповак</string>
     <string name="pref_category_downloads">Спампоўкі</string>
     <string name="pref_subtitle_style_summary">Вы можаце змяніць стыль субцітраў у наладах Android</string>
-    <string name="activity_name_settings">Налады Jellyfin</string>
+    <string name="activity_name_settings">Налады Wallaby Popcorn</string>
     <string name="external_player_unknown_error">Невядомая памылка знешняга прайгравальніка. Адсочванне прайгравання адключана.</string>
     <string name="external_player_system_default_description">Дазвольце сістэме выбар прайгравальніка, некаторыя прайгравальнікі могуць быць не цалкам сумяшчальныя.</string>
     <string name="external_player_not_supported_yet">Адсочванне прайгравання пакуль не падтрымліваецца ў выбраным знешнім прайгравальніку. Звяжыцеся з распрацоўшчыкамі, каб паспрабаваць дадаць падтрымку.</string>

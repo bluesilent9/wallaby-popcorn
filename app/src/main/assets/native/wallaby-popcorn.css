@@ -1,0 +1,10 @@
+/* Wallaby Popcorn: presentation only; keep Jellyfin layout and player behaviour. */
+:root { --wallaby-night:#160d22; --wallaby-panel:#261636; --wallaby-gold:#f6c66a; --wallaby-teal:#67d6cc; }
+.skinHeader, .mainDrawer { background-color:var(--wallaby-night) !important; }
+.backgroundContainer { background-color:var(--wallaby-night) !important; }
+.button-submit, .button-accent { background:var(--wallaby-gold) !important; color:#160d22 !important; }
+.emby-tab-button-active, .navMenuOption-selected { color:var(--wallaby-gold) !important; }
+.mdl-slider-background-lower, .itemProgressBarForeground { background:var(--wallaby-teal) !important; }
+.pageTitleWithDefaultLogo { background-image:url('/native/wallaby-popcorn.png') !important; background-size:2rem 2rem !important; background-position:left center !important; padding-left:2.6rem; width:auto !important; }
+.pageTitleWithDefaultLogo::after { content:'Wallaby Popcorn'; color:var(--wallaby-gold); font-size:1.1rem; font-weight:600; white-space:nowrap; }
+@media(max-width:400px) { .pageTitleWithDefaultLogo::after { font-size:.9rem; } }

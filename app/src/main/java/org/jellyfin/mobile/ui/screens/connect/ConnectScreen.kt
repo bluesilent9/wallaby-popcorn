@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,12 +60,19 @@ fun LogoHeader() {
     CenterRow(
         modifier = Modifier.padding(vertical = 25.dp),
     ) {
-        Image(
-            painter = painterResource(R.drawable.app_logo),
-            modifier = Modifier
-                .height(72.dp),
-            contentDescription = null,
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(R.drawable.wallaby_art),
+                modifier = Modifier.height(96.dp),
+                contentDescription = null,
+            )
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.h5,
+                color = MaterialTheme.colors.primary,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
     }
 }
 

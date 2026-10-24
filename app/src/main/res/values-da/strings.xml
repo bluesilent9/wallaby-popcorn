@@ -9,7 +9,7 @@
     <string name="pref_category_video_player">Videoafspiller</string>
     <string name="pref_music_notification_always_dismissible_title">Afviselig notifikation fra afspiller</string>
     <string name="pref_category_music_player">Musikafspiller</string>
-    <string name="activity_name_settings">Jellyfin-indstillinger</string>
+    <string name="activity_name_settings">Wallaby Popcorn-indstillinger</string>
     <string name="external_player_unknown_error">Ukendt fejl i den eksterne afspiller. Afspilningssporing er deaktiveret.</string>
     <string name="external_player_invalid_player">Den valgte eksterne afspiller er ikke understøttet. Afspilningssporing er deaktiveret.</string>
     <string name="external_player_not_supported_yet">Afspilningsspring understøttes endnu ikke i den valgte eksterne afspiller. Kontakt udvikleren for at få understøttelse til den.</string>
@@ -28,7 +28,7 @@
     <string name="notification_action_rewind">Spol tilbage</string>
     <string name="notification_action_previous">Forrige</string>
     <string name="music_notification_channel_description">Bruges til kontrol af musikafspilning</string>
-    <string name="music_notification_channel">Jellyfin Musik afspiller</string>
+    <string name="music_notification_channel">Wallaby Popcorn Musik afspiller</string>
     <string name="media_service_car_item_no_title">Ingen titel</string>
     <string name="media_service_car_section_genres">Genrer</string>
     <string name="media_service_car_section_songs">Sange</string>

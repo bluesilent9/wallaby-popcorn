@@ -42,6 +42,7 @@ import org.jellyfin.mobile.player.qualityoptions.QualityOptionsProvider
 import org.jellyfin.mobile.player.source.MediaSourceResolver
 import org.jellyfin.mobile.player.ui.PlayerFragment
 import org.jellyfin.mobile.setup.ConnectionHelper
+import org.jellyfin.mobile.setup.ssh.SshTunnelManager
 import org.jellyfin.mobile.utils.Constants
 import org.jellyfin.mobile.utils.PermissionRequestHelper
 import org.jellyfin.mobile.utils.extractId
@@ -72,7 +73,8 @@ val applicationModule = module {
     single { AssHandler(AssRenderType.OVERLAY_OPEN_GL) }
 
     // Controllers
-    single { ApiClientController(get(), get(), get(), get(), get()) }
+    single { SshTunnelManager(get()) }
+    single { ApiClientController(get(), get(), get(), get(), get(), get()) }
 
     // Event handlers and channels
     single { ActivityEventHandler(get()) }

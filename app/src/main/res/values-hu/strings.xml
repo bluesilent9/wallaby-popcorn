@@ -13,7 +13,7 @@
     <string name="pref_category_video_player">Videólejátszó</string>
     <string name="pref_music_notification_always_dismissible_title">Elvethető zenelejátszó értesítés(ek)</string>
     <string name="pref_category_music_player">Zenelejátszó</string>
-    <string name="activity_name_settings">Jellyfin Beállítások</string>
+    <string name="activity_name_settings">Wallaby Popcorn Beállítások</string>
     <string name="menu_item_none">Nincs</string>
     <string name="playback_info_and_x_more">...és %d további</string>
     <string name="playback_info_audio_streams">Audio sávok</string>
@@ -56,7 +56,7 @@
     <string name="video_player_web_description">Az alapértelmezett HTML-videolejátszó a webes felhasználói felületről</string>
     <string name="video_player_web">Webes lejátszó</string>
     <string name="music_notification_channel_description">A zenelejátszás vezérlésére szolgál</string>
-    <string name="music_notification_channel">Jellyfin Zenelejátszó</string>
+    <string name="music_notification_channel">Wallaby Popcorn Zenelejátszó</string>
     <string name="media_service_car_item_no_title">Nincs cím</string>
     <string name="media_service_car_section_genres">Műfajok</string>
     <string name="media_service_car_section_songs">Dalok</string>

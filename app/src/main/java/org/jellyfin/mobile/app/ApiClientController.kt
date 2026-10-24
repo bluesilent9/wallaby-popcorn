@@ -7,6 +7,8 @@ import org.jellyfin.mobile.data.dao.UserDao
 import org.jellyfin.mobile.data.entity.ServerEntity
 import org.jellyfin.mobile.data.entity.ServerUser
 import org.jellyfin.mobile.data.entity.UserEntity
+import org.jellyfin.mobile.setup.SshServerAddress
+import org.jellyfin.mobile.setup.ssh.SshTunnelManager
 import org.jellyfin.sdk.Jellyfin
 import org.jellyfin.sdk.api.client.ApiClient
 import org.jellyfin.sdk.model.DeviceInfo
@@ -18,6 +20,7 @@ class ApiClientController(
     private val apiClient: ApiClient,
     private val serverDao: ServerDao,
     private val userDao: UserDao,
+    private val sshTunnelManager: SshTunnelManager,
 ) {
     private val baseDeviceInfo: DeviceInfo
         get() = jellyfin.options.deviceInfo!!
@@ -26,10 +29,11 @@ class ApiClientController(
      * Store server with [hostname] in the database.
      */
     suspend fun setupServer(hostname: String) {
+        val endpoint = resolveEndpoint(hostname)
         appPreferences.currentServerId = withContext(Dispatchers.IO) {
             serverDao.getServerByHostname(hostname)?.id ?: serverDao.insert(hostname)
         }
-        apiClient.update(baseUrl = hostname)
+        apiClient.update(baseUrl = endpoint)
     }
 
     suspend fun setupUser(serverId: Long, userId: UUID, accessToken: String) {
@@ -40,12 +44,14 @@ class ApiClientController(
     }
 
     suspend fun loadSavedServer(): ServerEntity? {
-        val server = withContext(Dispatchers.IO) {
-            val serverId = appPreferences.currentServerId ?: return@withContext null
-            serverDao.getServer(serverId)
-        }
+        val server = loadSavedServerProfile()
         configureApiClientServer(server)
         return server
+    }
+
+    suspend fun loadSavedServerProfile(): ServerEntity? = withContext(Dispatchers.IO) {
+        val serverId = appPreferences.currentServerId ?: return@withContext null
+        serverDao.getServer(serverId)
     }
 
     suspend fun loadSavedUser(): UserEntity? = withContext(Dispatchers.IO) {
@@ -77,8 +83,24 @@ class ApiClientController(
         }
     }
 
-    private fun configureApiClientServer(server: ServerEntity?) {
-        apiClient.update(baseUrl = server?.hostname)
+    private suspend fun configureApiClientServer(server: ServerEntity?) {
+        if (server == null) sshTunnelManager.disconnect()
+        apiClient.update(baseUrl = server?.let { resolveEndpoint(it.hostname) })
+    }
+
+    private suspend fun resolveEndpoint(hostname: String): String {
+        val sshAddress = SshServerAddress.parse(hostname) ?: run {
+            sshTunnelManager.disconnect()
+            return hostname
+        }
+        return sshTunnelManager.currentEndpoint(sshAddress)
+            ?: sshTunnelManager.connectWithEnrolledKey(sshAddress)
+    }
+
+    fun endpointForExistingConnection(hostname: String): String {
+        val sshAddress = SshServerAddress.parse(hostname) ?: return hostname
+        return sshTunnelManager.currentEndpoint(sshAddress)
+            ?: throw IllegalStateException("The SSH tunnel is not active; direct server access is disabled")
     }
 
     private fun configureApiClientUser(userId: UUID, accessToken: String) {
@@ -100,7 +122,7 @@ class ApiClientController(
         val serverUser = userDao.getServerUser(server, user) ?: error("Invalid server user combination (server=$server, user=$user)")
 
         return jellyfin.createApi(
-            baseUrl = serverUser.server.hostname,
+            baseUrl = endpointForExistingConnection(serverUser.server.hostname),
             accessToken = serverUser.user.accessToken,
             deviceInfo = baseDeviceInfo.copy(id = baseDeviceInfo.id + serverUser.user.userId),
         )

@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.jellyfin.mobile.app.ApiClientController
 import org.jellyfin.mobile.data.entity.ServerEntity
 import org.jellyfin.mobile.data.entity.UserEntity
+import org.jellyfin.mobile.setup.ssh.SshTunnelException
 import java.util.UUID
 
 class MainViewModel(
@@ -40,8 +41,13 @@ class MainViewModel(
     }
 
     private suspend fun refreshServer() {
-        val serverEntity = apiClientController.loadSavedServer()
-        _serverState.value = serverEntity?.let { entity -> ServerState.Available(entity) } ?: ServerState.Unset
+        try {
+            val serverEntity = apiClientController.loadSavedServer()
+            _serverState.value = serverEntity?.let { entity -> ServerState.Available(entity) } ?: ServerState.Unset
+        } catch (_: SshTunnelException) {
+            // The connect screen restores the saved SSH address and guides through trust/enrollment.
+            _serverState.value = ServerState.Unset
+        }
     }
 
     private suspend fun refreshUser() {

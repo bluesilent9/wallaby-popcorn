@@ -11,7 +11,7 @@
     <string name="host_input_hint">Hôte</string>
     <string name="connect_to_server_title">Se connecter au serveur</string>
     <string name="pref_category_video_player">Lecteur vidéo</string>
-    <string name="activity_name_settings">Paramètres Jellyfin</string>
+    <string name="activity_name_settings">Paramètres Wallaby Popcorn</string>
     <string name="menu_item_none">Aucun</string>
     <string name="pref_category_music_player">Lecteur de musique</string>
     <string name="pref_music_notification_always_dismissible_title">Notification rejetable du lecteur</string>
@@ -55,7 +55,7 @@
     <string name="external_player_mpv_description">Un lecteur vidéo simple, léger et libre. Il supporte une grande variété de formats de fichiers multimédias.</string>
     <string name="external_player_mpv">Lecteur MPV</string>
     <string name="external_player_app">Application externe de lecture</string>
-    <string name="music_notification_channel">Lecteur de musique Jellyfin</string>
+    <string name="music_notification_channel">Lecteur de musique Wallaby Popcorn</string>
     <string name="media_service_car_item_no_title">Aucun titre</string>
     <string name="media_service_car_section_genres">Genres</string>
     <string name="media_service_car_section_songs">Chansons</string>

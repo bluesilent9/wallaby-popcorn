@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -26,8 +27,11 @@ import androidx.compose.material.ListItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -48,11 +52,16 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.jellyfin.mobile.R
 import org.jellyfin.mobile.app.ApiClientController
 import org.jellyfin.mobile.setup.ConnectionHelper
+import org.jellyfin.mobile.setup.SshServerAddress
+import org.jellyfin.mobile.setup.ssh.SshTunnelException
+import org.jellyfin.mobile.setup.ssh.SshTunnelManager
 import org.jellyfin.mobile.ui.state.CheckUrlState
 import org.jellyfin.mobile.ui.state.ServerSelectionMode
 import org.jellyfin.mobile.ui.utils.CenterRow
@@ -65,6 +74,7 @@ fun ServerSelection(
     showExternalConnectionError: Boolean,
     apiClientController: ApiClientController = koinInject(),
     connectionHelper: ConnectionHelper = koinInject(),
+    sshTunnelManager: SshTunnelManager = koinInject(),
     onConnected: suspend (String) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -74,12 +84,21 @@ fun ServerSelection(
     val serverSuggestions = remember { mutableStateListOf<ServerSuggestion>() }
     var checkUrlState by remember<MutableState<CheckUrlState>> { mutableStateOf(CheckUrlState.Unchecked) }
     var externalError by remember { mutableStateOf(showExternalConnectionError) }
+    var restoreSavedSsh by remember { mutableStateOf(false) }
+    var pendingSshAddress by remember { mutableStateOf<SshServerAddress?>(null) }
+    var sshFingerprint by remember { mutableStateOf<String?>(null) }
+    var sshHostKeyAlgorithm by remember { mutableStateOf<String?>(null) }
+    var showSshPasswordDialog by remember { mutableStateOf(false) }
+    var sshPassword by remember { mutableStateOf("") }
+    var showSshPassword by remember { mutableStateOf(false) }
+    var sshSetupError by remember { mutableStateOf<String?>(null) }
 
     // Prefill currently selected server if available
     LaunchedEffect(Unit) {
-        val server = apiClientController.loadSavedServer()
+        val server = apiClientController.loadSavedServerProfile()
         if (server != null) {
             hostname = server.hostname
+            restoreSavedSsh = SshServerAddress.parse(server.hostname) != null
         }
     }
 
@@ -109,17 +128,47 @@ fun ServerSelection(
         }
     }
 
-    fun onSubmit() {
+    fun onSubmit(addressText: String = hostname) {
         if (checkUrlState == CheckUrlState.Pending) return
 
         externalError = false
         checkUrlState = CheckUrlState.Pending
         coroutineScope.launch {
-            val state = connectionHelper.checkServerUrl(hostname)
-            checkUrlState = state
-            if (state is CheckUrlState.Success) {
-                onConnected(state.address)
+            val sshAddress = SshServerAddress.parse(addressText)
+            if (sshAddress != null) {
+                pendingSshAddress = sshAddress
+                try {
+                    val trustedFingerprint = sshTunnelManager.getTrustedFingerprint(sshAddress)
+                    val observedHostKey = sshTunnelManager.inspectHostKey(sshAddress)
+                    if (trustedFingerprint == null) {
+                        sshFingerprint = observedHostKey.fingerprint
+                        sshHostKeyAlgorithm = observedHostKey.algorithm
+                        checkUrlState = CheckUrlState.Unchecked
+                    } else if (sshTunnelManager.hasEnrolledKey(sshAddress)) {
+                        checkUrlState = CheckUrlState.Unchecked
+                        onConnected(sshAddress.profileAddress())
+                    } else {
+                        showSshPasswordDialog = true
+                        checkUrlState = CheckUrlState.Unchecked
+                    }
+                } catch (exception: SshTunnelException) {
+                    sshSetupError = exception.message
+                    checkUrlState = CheckUrlState.Unchecked
+                }
+            } else if (addressText.trim().startsWith("ssh://", ignoreCase = true)) {
+                checkUrlState = CheckUrlState.Error("Enter an SSH address as ssh://username@host[:port], without a password or path.")
+            } else {
+                val state = connectionHelper.checkServerUrl(addressText)
+                checkUrlState = state
+                if (state is CheckUrlState.Success) onConnected(state.address)
             }
+        }
+    }
+
+    LaunchedEffect(restoreSavedSsh) {
+        if (restoreSavedSsh) {
+            restoreSavedSsh = false
+            onSubmit(hostname)
         }
     }
 
@@ -138,7 +187,7 @@ fun ServerSelection(
                     text = hostname,
                     errorText = when {
                         externalError -> stringResource(R.string.connection_error_cannot_connect)
-                        else -> (checkUrlState as? CheckUrlState.Error)?.message
+                        else -> sshSetupError ?: (checkUrlState as? CheckUrlState.Error)?.message
                     },
                     loading = checkUrlState is CheckUrlState.Pending,
                     onTextChange = { value ->
@@ -163,10 +212,109 @@ fun ServerSelection(
                     onSelectServer = { url ->
                         hostname = url
                         serverSelectionMode = ServerSelectionMode.ADDRESS
-                        onSubmit()
+                        onSubmit(url)
                     },
                 )
             }
+        }
+    }
+
+    pendingSshAddress?.let { sshAddress ->
+        val fingerprint = sshFingerprint
+        if (fingerprint != null) {
+            AlertDialog(
+                onDismissRequest = { sshFingerprint = null; pendingSshAddress = null },
+                title = { Text("Verify SSH server") },
+                text = {
+                    Text(
+                        "Server: ${sshAddress.hostname}:${sshAddress.port}\nSSH account: ${sshAddress.username}\n\n" +
+                            "Verify this fingerprint with the server administrator before sending the SSH account password.\n\n" +
+                            "SHA-256: $fingerprint",
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        sshTunnelManager.trustHostKey(sshAddress, fingerprint, requireNotNull(sshHostKeyAlgorithm))
+                        sshFingerprint = null
+                        sshSetupError = null
+                        showSshPasswordDialog = true
+                    }) { Text("Trust and continue") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { sshFingerprint = null; pendingSshAddress = null }) { Text("Cancel") }
+                },
+            )
+        }
+
+        if (showSshPasswordDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showSshPasswordDialog = false
+                    pendingSshAddress = null
+                    sshPassword = ""
+                    sshSetupError = null
+                },
+                title = { Text("Set up SSH access") },
+                text = {
+                    Column {
+                        Text(
+                            "Enter the Linux SSH account password for ${sshAddress.username}@${sshAddress.hostname}. " +
+                                "It authenticates this first connection so the app can install this phone's public key. " +
+                                "This is separate from your Jellyfin password and will not be saved.",
+                        )
+                        OutlinedTextField(
+                            value = sshPassword,
+                            onValueChange = { sshPassword = it; sshSetupError = null },
+                            label = { Text("SSH account password") },
+                            singleLine = true,
+                            visualTransformation = if (showSshPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                            trailingIcon = {
+                                IconButton(onClick = { showSshPassword = !showSshPassword }) {
+                                    Icon(
+                                        imageVector = if (showSshPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+                                        contentDescription = if (showSshPassword) "Hide password" else "Show password",
+                                    )
+                                }
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        )
+                        sshSetupError?.let { message ->
+                            Text(text = message, color = MaterialTheme.colors.error)
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        enabled = sshPassword.isNotEmpty() && checkUrlState != CheckUrlState.Pending,
+                        onClick = {
+                            val passwordChars = sshPassword.toCharArray()
+                            checkUrlState = CheckUrlState.Pending
+                            coroutineScope.launch {
+                                try {
+                                    sshTunnelManager.enrollAndConnect(sshAddress, passwordChars)
+                                    showSshPasswordDialog = false
+                                    sshPassword = ""
+                                    sshSetupError = null
+                                    onConnected(sshAddress.profileAddress())
+                                } catch (exception: SshTunnelException) {
+                                    sshSetupError = exception.message
+                                } finally {
+                                    passwordChars.fill('\u0000')
+                                    checkUrlState = CheckUrlState.Unchecked
+                                }
+                            }
+                        },
+                    ) { Text(if (checkUrlState == CheckUrlState.Pending) "Connecting…" else "Install key and connect") }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showSshPasswordDialog = false
+                        pendingSshAddress = null
+                        sshPassword = ""
+                        sshSetupError = null
+                    }) { Text("Cancel") }
+                },
+            )
         }
     }
 }
