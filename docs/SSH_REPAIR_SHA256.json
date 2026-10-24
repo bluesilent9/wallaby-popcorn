@@ -1,0 +1,13 @@
+{
+  "app/src/main/AndroidManifest.xml": "8b1afd39bf52d23ee2f35dd5ac04edf7c92118e55c6d70b5674c68485d861953",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/AaaaDnsPacket.kt": "ab97721fccb2da7c6ee7dd2f2451b63fc751e455e73010f2b6df960e2f494daa",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/DualStackSocketFactory.kt": "7afc1b3a2c30c902157d1568b0b22d9d19eee55fa68d093ebda4d65ba22e08a0",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/SshAddressLookup.kt": "f1b7b46508ed4dcb2c4527fa9484b91c6c260784ca6f4d57d29c282032195f1c",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/SshAddressResolver.kt": "e337bb2f928cfa36b2a1c8c24fd761974ffa01739a73b535f0e94a22e7497c52",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/SshFailureClassifier.kt": "f5531761101af00fd8b37e9a8c6d52da74392187f76625025a370fe4599a95d3",
+  "app/src/main/java/org/jellyfin/mobile/setup/ssh/SshTunnelManager.kt": "aa2552102cb5313b193cb58700118446bb7c1a86bfe9fbf396087930e8fbe7af",
+  "app/src/test/java/org/jellyfin/mobile/setup/ssh/AaaaDnsPacketTest.kt": "369ead268e41cfe1ee5b1c5aee4cfa014b459e2000e70b8609c47f659590df0e",
+  "app/src/test/java/org/jellyfin/mobile/setup/ssh/DualStackSocketFactoryTest.kt": "32a109245ea172ae8a879bc995d4708a79fce28740bfe536c5a5c818fdee28f5",
+  "app/src/test/java/org/jellyfin/mobile/setup/ssh/SshAddressLookupTest.kt": "b94af23f8fecdd21054b9c8a343dbce3becee489cb6caf493abcadd66f1ec4f8",
+  "app/src/test/java/org/jellyfin/mobile/setup/ssh/SshFailureClassifierTest.kt": "8329f3b5e2e22e79388207b8598b49f50cbe30ba6796e362b706e6df872f7f27"
+}

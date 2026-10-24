@@ -1,20 +1,19 @@
-# Build paused until reboot
+# Android Mobile build and update policy
 
-Do not run Gradle, compile, package, install, or trigger GitHub Actions before the user returns after reboot and authorizes the build.
+The latest Mobile SSH repair built successfully on 25 October 2026. All21 focused unit tests passed, and both requested phones were updated in place. Both completed SSH connection, automatic sign-in and media-library loading. Playback and external-network tests were not performed in that validation.
 
-Prepared checkout in this chat: `/home/dave/Documents/Codex/2026-10-24/i/work/wallaby-popcorn`.
+## Stable source and upstream updates
 
-## Next session
+`Stable` holds the tested Mobile source. The fork remains based on Jellyfin Android commit `21795394ea14854330784862221d424b8bfa152a`; publishing this repair does not merge newer upstream features. Upstream changes are reviewed and incorporated only when the maintainer requests them.
 
-1. Confirm this branch and the saved validation results. Do not change the preserved SSH implementation.
-2. Restore local-only SDK configuration (`sdk.dir=/home/dave/Documents/Codex/android-sdk`) or set ANDROID_HOME. No SDK paths or signing credentials are published.
-3. Build **only** `:app:assembleLibreDebug` with the established JDK/SDK. The initial APK follows the already device-tested variant; the visible label and artwork are Wallaby Popcorn. Do not use aggregate `build` or `assembleDebug`, which may compile multiple flavours. A later hardened release is separate work.
-4. Run the existing focused unit tests for the mobile variant after the reboot. The seven baseline tests passed before rebranding; they have not been rerun during this no-build preparation.
-5. Sign the resulting APK with the original app signing key, using the earlier local signing setup. Compare its certificate to the installed APK. Do not publish signing keys, local passwords or credentials.
-6. Verify application ID `org.jellyfin.mobile.debug`, label Wallaby Popcorn, upgraded version code, expected icon and a complete dex package before installation.
-7. Install as an update, then test startup, saved SSH identity/pin, retained Jellyfin login, IPv6/mobile-data connection, LAN connection, video playback, audio controls and reconnect.
-8. Publish only the validated Android Mobile APK. No TV or desktop builds.
+Jellyfin's original `buildSrc/src/main/kotlin/VersionUtils.kt` is retained unchanged, including its development fallback `0.0.0-dev.1` and its existing release-version override. Do not invent a Wallaby-specific version sequence. Already installed repair APKs retain their historical1.0.0-dev.1/code1000001 metadata. A future update must use an appropriate upstream release number/version code above the installed code to preserve Android's normal upgrade behavior. Do not uninstall or clear data to work around version numbering.
 
-## Preparation checks
+## When another build is requested
 
-Only source comparisons, XML/resource checks, JavaScript syntax checks and artwork/layout previews are permitted during preparation. They do not establish that the APK compiles or works on a device. Full Android validation is pending the reboot/build phase.
+- Build only the Android Mobile libre variant, one worker at a time. Do not launch TV, desktop, aggregate builds or GitHub APK builds without a separate request.
+- Keep local SDK paths and the existing private signing key outside Git. Match the installed signing certificate and application ID `org.jellyfin.mobile.debug` to retain saved SSH keys, pinned host keys and Jellyfin login.
+- Run `:app:testLibreDebugUnitTest :app:assembleLibreDebug` with the established JDK/SDK. Use the existing version override when producing an upstream-numbered release.
+- Verify the APK signature, version, label, artwork and repaired SSH source; update in place with ADB, then check connection, retained sign-in and playback.
+- `docs/PRESERVED_SSH_SHA256.json` records the earlier baseline. `docs/SSH_REPAIR_SHA256.json` records the deliberately changed connection sources. The repair retains IPv6 first, fallback, strict host verification and loopback-only forwarding.
+
+The source publication restores upstream version logic only; it does not trigger a new build. Inherited workflows remain manual-only placeholders with original workflow references retained under `docs/upstream-workflows`.

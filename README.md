@@ -8,7 +8,7 @@ Wallaby Popcorn is an independent fork of [Jellyfin Android](https://github.com/
 
 ## Current scope and status
 
-Android **Mobile only**, initially the libre variant used by the tested SSH app. Branding preparation is complete; **no Wallaby Popcorn APK has been built yet**. Build and device validation are paused until the requested computer reboot. Android TV, desktop and other packages are future work.
+Android **Mobile only**, using the libre variant. The SSH repair was built and installed on two phones on 25 October 2026. Both reconnected through SSH, signed in automatically and displayed the media library. All 21 focused tests passed. Playback and external-network testing remain separate checks. Android TV, desktop and other Wallaby Popcorn packages are future work.
 
 ## Preserved connection behaviour
 
@@ -17,19 +17,19 @@ Android **Mobile only**, initially the libre variant used by the tested SSH app.
 - The stable local tunnel port `18096` and existing Jellyfin session handling.
 - Existing server-side forwarding target and restricted-key compatibility.
 
-The connection implementation is carried over byte-for-byte from the Android Mobile source successfully tested over IPv6/mobile data on 24 October 2026. Branding changes do not require a server configuration change.
+The original IPv6-first connection path is retained. The latest repair explicitly retrieves IPv6 DNS records when Android omits them from a hostname lookup, and gives clearer connection errors. See [SSH_REPAIR.md](docs/SSH_REPAIR.md). No server configuration change is required.
 
 ## Branding and updates
 
 Midnight plum surfaces, popcorn-gold actions, teal accents and the approved cinema wallaby illustration. Main and debug resource sets both display **Wallaby Popcorn**. Internal Kotlin namespaces and the installed package ID `org.jellyfin.mobile.debug` are deliberately retained for compatibility; the technical ID is not the displayed app name.
 
-The eventual update must be signed with the same private signing key as the installed SSH app. That key is not included here. Do not uninstall the existing app before updating: uninstalling removes its saved keys and app data.
+Each update must be signed with the same private signing key as the installed SSH app. That key is not included here. Do not uninstall the existing app before updating: uninstalling removes its saved keys and app data.
 
 ## Source history and upstream updates
 
-Base: Jellyfin Android commit `21795394ea14854330784862221d424b8bfa152a`. The app’s SSH and branding work lives on the `wallaby-popcorn` branch. Keep upstream changes separate, review merges into this branch, then repeat SSH and playback checks. A fork retains full source and history; Git records the differences in our commits. Upstream updates are not automatic.
+Base: Jellyfin Android commit `21795394ea14854330784862221d424b8bfa152a`. The tested Mobile source lives on the `Stable` branch. Jellyfin upstream changes are incorporated only when the maintainer chooses: review and merge selected upstream changes into a separate working branch, test SSH and playback, then promote a tested revision to `Stable`. A fork retains full source and history; Git records the differences in our commits. Upstream updates are not automatic. The source uses Jellyfin’s original version-name and version-code logic; the upstream development fallback is `0.0.0-dev.1`, with release numbers supplied through the existing version override. Wallaby Popcorn does not introduce a separate version sequence. The APK already installed on the two phones retains its earlier `1.0.0-dev.1` metadata; this source-only correction does not rebuild or downgrade those installations. Future updates must keep an Android version code that can upgrade them.
 
-See [BUILD_NEXT.md](BUILD_NEXT.md) for the staged single-variant build and validation plan. Inherited upstream workflows are retained as disabled reference files in `docs/upstream-workflows`; active workflow stubs are manual-only and cannot compile an APK.
+See [BUILD_NEXT.md](BUILD_NEXT.md) for the single-variant build and validation policy. Inherited upstream workflows are retained as disabled reference files in `docs/upstream-workflows`; active workflow stubs are manual-only and cannot compile an APK.
 
 ## Attribution and licence
 

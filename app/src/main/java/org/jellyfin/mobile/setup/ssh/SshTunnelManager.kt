@@ -16,9 +16,6 @@ import kotlinx.coroutines.withContext
 import org.jellyfin.mobile.setup.SshServerAddress
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import java.nio.charset.StandardCharsets
 import java.security.KeyStore
 import java.security.MessageDigest
@@ -50,6 +47,8 @@ enum class SshFailure {
     DNS,
     TIMEOUT,
     CONNECTION_REFUSED,
+    NETWORK_UNREACHABLE,
+    CONNECTION_LOST,
     SSH_HANDSHAKE_FAILED,
     HOST_KEY_CHANGED,
     PASSWORD_REJECTED,
@@ -64,11 +63,12 @@ enum class SshFailure {
     UNKNOWN,
 }
 
-class SshTunnelException(val failure: SshFailure, message: String) : Exception(message)
+class SshTunnelException(val failure: SshFailure, message: String, cause: Throwable? = null) : Exception(message, cause)
 data class SshHostKeyIdentity(val fingerprint: String, val algorithm: String)
 
 /** Owns the SSH identity, pinned server key, connection, and loopback-only Jellyfin tunnel. */
 class SshTunnelManager(private val context: Context) {
+    private val addressResolver = SshAddressResolver(context)
     private val preferences = context.getSharedPreferences(SSH_PIN_PREFERENCES, Context.MODE_PRIVATE)
     private val sshDirectory = File(context.filesDir, "ssh-tunnel")
     private var session: Session? = null
@@ -98,7 +98,7 @@ class SshTunnelManager(private val context: Context) {
         for (algorithm in algorithms) {
             val probe = JSch().getSession(address.username, address.hostname, address.port)
             lastProbe = probe
-            probe.setSocketFactory(DualStackSocketFactory(SSH_CONNECT_TIMEOUT_MS))
+            probe.setSocketFactory(DualStackSocketFactory(SSH_CONNECT_TIMEOUT_MS, addressResolver::resolve))
             try {
                 probe.setConfig("StrictHostKeyChecking", "no")
                 probe.setHostKeyRepository(ProbeHostKeyRepository)
@@ -209,9 +209,9 @@ class SshTunnelManager(private val context: Context) {
         val port = LOCAL_JELLYFIN_PORT
         try {
             connected.setPortForwardingL("127.0.0.1", port, "127.0.0.1", 8096)
-        } catch (_: JSchException) {
+        } catch (error: JSchException) {
             connected.disconnect()
-            throw SshTunnelException(SshFailure.FORWARDING_REJECTED, "The phone could not establish the restricted Jellyfin tunnel.")
+            throw SshTunnelException(SshFailure.FORWARDING_REJECTED, "SSH signed in, but the local Jellyfin tunnel could not be opened. Retry, then check SSH forwarding permissions and whether another tunnel is using the local port.", error)
         }
         session = connected
         localPort = port
@@ -226,7 +226,7 @@ class SshTunnelManager(private val context: Context) {
         jsch: JSch = JSch(),
     ): Session {
         val ssh = jsch.getSession(address.username, address.hostname, address.port)
-        ssh.setSocketFactory(DualStackSocketFactory(SSH_CONNECT_TIMEOUT_MS))
+        ssh.setSocketFactory(DualStackSocketFactory(SSH_CONNECT_TIMEOUT_MS, addressResolver::resolve))
         ssh.setHostKeyRepository(PinnedHostKeyRepository(pin))
         ssh.setConfig("StrictHostKeyChecking", "yes")
         ssh.setConfig("PreferredAuthentications", if (password != null) "password" else "publickey")
@@ -368,22 +368,7 @@ class SshTunnelManager(private val context: Context) {
         passwordAuthentication: Boolean = false,
         publicKeyAuthentication: Boolean = false,
     ): SshTunnelException {
-        val root = generateSequence(exception) { it.cause }.lastOrNull()
-        val message = exception?.message.orEmpty()
-        val (failure, display) = when {
-            root is UnknownHostException -> SshFailure.DNS to "The SSH host name could not be resolved."
-            root is SocketTimeoutException || message.contains("timeout", true) -> SshFailure.TIMEOUT to "The SSH connection timed out. Check the network and server."
-            root is ConnectException -> SshFailure.CONNECTION_REFUSED to "The SSH server refused the connection."
-            message.contains("HostKey", true) || message.contains("host key", true) -> SshFailure.HOST_KEY_CHANGED to "The SSH server host key changed. Verify it with the administrator."
-            message.contains("Auth fail", true) && passwordAuthentication -> SshFailure.PASSWORD_REJECTED to "The SSH password was rejected or password authentication is unavailable."
-            message.contains("Auth fail", true) && publicKeyAuthentication -> SshFailure.PUBLIC_KEY_REJECTED to "The enrolled SSH key was rejected. Password fallback is disabled."
-            message.contains("Auth fail", true) -> SshFailure.UNSUPPORTED_AUTHENTICATION to "The SSH server did not accept the available authentication method."
-            session != null && !session.isConnected && (exception is JSchException || root is JSchException) ->
-                SshFailure.SSH_HANDSHAKE_FAILED to "No SSH handshake completed on this port. Check the SSH port; it is usually 22."
-            session?.isConnected == true -> SshFailure.JELLYFIN_UNAVAILABLE to "SSH connected, but the Jellyfin tunnel could not be opened."
-            else -> SshFailure.UNKNOWN to "The SSH connection failed. Check the server address and SSH configuration."
-        }
-        return SshTunnelException(failure, display)
+        return classifySshFailure(exception, session?.isConnected == true, passwordAuthentication, publicKeyAuthentication)
     }
 
     private data class IdentityFiles(val privateFile: File, val publicFile: File)
