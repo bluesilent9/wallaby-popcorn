@@ -8,3 +8,7 @@ build
 /captures
 .externalNativeBuild
 .cxx
+
+# Local Python enrolment-test cache
+__pycache__/
+*.pyc
