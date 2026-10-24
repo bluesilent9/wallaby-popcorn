@@ -31,8 +31,3 @@ jobs:
           test "$(git write-tree)" = e967a813ac7de9f68ba449ca00d38c379508972f
           test "$(git hash-object -t commit -w /tmp/stable-commit)" = c95908f7431136ea97c38ed1e878e4b14c0acd2a
           git push origin c95908f7431136ea97c38ed1e878e4b14c0acd2a:refs/heads/Stable
-          git checkout -B restore-maintenance "$GITHUB_SHA"
-          git show 38d8dc1eb7660cee94ef48f9c37ab1e4a0df0b44:.github/workflows/prepare-wallaby.yml > .github/workflows/prepare-wallaby.yml
-          git add .github/workflows/prepare-wallaby.yml
-          git commit -m 'Restore maintenance workflow after Stable publication [skip ci]'
-          git push origin HEAD:refs/heads/wallaby-popcorn
